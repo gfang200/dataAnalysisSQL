@@ -1,13 +1,3 @@
-SET materialize_owner_group lrs;
-SET materialize_overwrite TRUE;
-define macro modulo WHEN mod(fingerprint2011(cast(gaia_id AS string)),200) BETWEEN $1 AND $2 THEN $3; #segmentation based off Gaia_id.  May show bias to a group initially but will level off over time.
-define macro languages en','en-us;
-define macro countries us;
-define macro email_launch_date 2016-11-04 ;
-define macro campaign_id 10035542;
-
-MATERIALIZE "csv:/encrypted/sid=70831:mkey=gamma.csv.uploader:mdb=bulk-email/namespace/bulk-email/gamma/csv/no_schedule/$campaign_id/$campaign_id-${YYYYMMDD}@1.csv header:true" AS #select reporting_signals.signal_1 from gamma_reporting.SentMessages.all where campaign_id = 10023933;
-
 SELECT * from
   (SELECT a.OptOutId AS OptOutId , b.EmailAddress AS EmailAddress , a.LanguagePreference AS LanguagePreference , a.country AS country , a.OptOutId AS Reporting1 , Control
    FROM
