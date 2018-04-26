@@ -7,9 +7,7 @@ FROM ( $base_dates cal
            (SELECT *
             FROM
               (SELECT base.opt_out_id ,
-                      chirp_email_prefs /*, case when link_date between '2016-11-04' and '2016-11-09' then link_date
-         when link_date between '2016-11-12' and '2016-11-13' then link_date
-          else partition_date end as partition_date*/ ,
+                      chirp_email_prefs,
                       partition_date ,
                       previous_email_prefs ,
                       CASE WHEN previous_email_prefs IS TRUE
@@ -29,7 +27,7 @@ date(TIMESTAMP_trunc(timestamp_millis(b.time_linked_with_user_ms),DAY,"America/L
                      FROM lrs.history.email_preferences.all a,
                           unnest(a.device_data) b
                      JOIN lrs.devices v ON b.device_id = v.device_id
-WHERE $base_filter --  and cast(a._partition_date as int64) between 20161110 and 20161129
+WHERE $base_filter
 
                      GROUP BY 1,
                               2,
@@ -49,9 +47,7 @@ FROM
 (SELECT *
 FROM
 (SELECT base.opt_out_id ,
-    chirp_email_prefs /*, case when link_date between '2016-11-04' and '2016-11-09' then link_date
-         when link_date between '2016-11-12' and '2016-11-13' then link_date
-          else partition_date end as partition_date*/ ,
+    chirp_email_prefs,
     partition_date ,
     previous_email_prefs ,
     CASE WHEN previous_email_prefs IS TRUE
@@ -71,7 +67,7 @@ date(TIMESTAMP_trunc(timestamp_millis(b.time_linked_with_user_ms),DAY,"America/L
   FROM lrs.history.email_preferences.all a,
        unnest(a.device_data) b
   JOIN lrs.devices v ON b.device_id = v.device_id
-WHERE $base_filter --  and cast(a._partition_date as int64) between 20161110 and 20161129
+WHERE $base_filter
 
   GROUP BY 1,
            2,
@@ -95,9 +91,7 @@ FROM
 (SELECT *
 FROM
 (SELECT base.opt_out_id ,
-    chirp_email_prefs /*, case when link_date between '2016-11-04' and '2016-11-09' then link_date
-         when link_date between '2016-11-12' and '2016-11-13' then link_date
-          else partition_date end as partition_date*/ ,
+    chirp_email_prefs,
     partition_date ,
     previous_email_prefs ,
     CASE WHEN previous_email_prefs IS TRUE
@@ -150,13 +144,6 @@ FROM
      chirp_email_prefs ,
      partition_date ,
      previous_email_prefs
- /*
-    , case when previous_email_prefs is null and chirp_email_prefs = true then 1
-            when previous_email_prefs = false and chirp_email_prefs = true then 1
-            else  0 end as optin
-    , case when previous_email_prefs is null and chirp_email_prefs = false then 1
-            when previous_email_prefs is false and chirp_email_prefs = true then 1
-            else  0 end as optout */
 FROM
 (SELECT opt_out_id ,
       chirp_email_prefs ,
@@ -172,7 +159,7 @@ date(TIMESTAMP_trunc(timestamp_millis(b.time_linked_with_user_ms),DAY,"America/L
   FROM lrs.history.email_preferences.all a,
        unnest(a.device_data) b
   JOIN lrs.devices v ON b.device_id = v.device_id
-WHERE $base_filter --  and cast(a._partition_date as int64) between 20161110 and 20161129
+WHERE $base_filter
 
   GROUP BY 1,
            2,
